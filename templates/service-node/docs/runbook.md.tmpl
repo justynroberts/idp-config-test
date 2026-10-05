@@ -1,0 +1,11 @@
+# {{ values.name }} runbook
+
+## What it does
+
+{{ values.description }}
+
+## When it is unhealthy
+
+1. Check `/health`.
+2. Look at the last deploy on the portal's Deployments tab; roll back if it is recent.
+3. Page {{ values.owner }} if it is still failing.

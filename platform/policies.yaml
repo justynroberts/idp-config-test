@@ -1,0 +1,65 @@
+# Access control. Deny by default. Explicit deny beats allow. Platform admins (role: admin) bypass.
+apiVersion: idp.fintonlabs.dev/v1
+kind: Policy
+metadata: { name: everyone-can-read, description: Any signed-in engineer can browse the catalog, docs, offerings and ask questions. }
+spec:
+  effect: allow
+  subjects: ["*"]
+  actions: [entity.read, doc.read, offering.read, scorecard.read, request.read, ai.ask, mcp.call, mcp.read, policy.read, proposal.read, discovery.read]
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Role
+metadata: { name: service-owner, description: Owners manage what their team owns. }
+spec:
+  subjects: [group:eng]
+  grants:
+    - actions: [entity.propose]
+      resources: { owner: "{{ subject.teams }}" }
+    - actions: [action.run]
+      resources: { owner: "{{ subject.teams }}" }
+    - actions: [deployment.report]
+      resources: { owner: "{{ subject.teams }}" }
+    - actions: [property.write]
+      resources: { owner: "{{ subject.teams }}" }
+    - actions: [offering.request]
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Policy
+metadata: { name: platform-merge, description: Platform engineers review and merge proposals and run discovery. }
+spec:
+  effect: allow
+  subjects: [group:team-platform]
+  actions: [proposal.accept, entity.write, discovery.review, discovery.run, policy.simulate, audit.read, agent.run, deployment.report, source.run, property.write]
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Policy
+metadata: { name: sre-operate, description: SRE can run actions anywhere and approve requests. }
+spec:
+  effect: allow
+  subjects: [group:sre]
+  actions: [request.approve, action.run, audit.read]
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Policy
+metadata: { name: platform-approve }
+spec:
+  effect: allow
+  subjects: [group:team-platform]
+  actions: [request.approve]
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Policy
+metadata: { name: restricted-fields, description: Cost centres and similar are hidden unless you are finance or platform. }
+spec:
+  effect: allow
+  subjects: [group:finance, group:team-platform]
+  actions: [entity.read.restricted]
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Policy
+metadata: { name: no-actions-on-deprecated, description: Nothing runs against deprecated services, for anyone. }
+spec:
+  effect: deny
+  subjects: ["*"]
+  actions: [action.run]
+  conditions: "resource.lifecycle == 'deprecated'"

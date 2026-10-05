@@ -1,0 +1,254 @@
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: payments-api
+  title: Payments API
+  description: Authorises card payments and writes them to the ledger. The one service that must never be down at 9am on Monday.
+  tags: [tier-1, go, pci]
+  annotations:
+    # Fields listed here are hidden from anyone without entity.read.restricted.
+    idp/restricted-fields: spec.costCentre
+    sonarqube.org/project-key: acme_payments-api
+    sentry.io/project-slug: payments-api
+    datadoghq.com/service-name: payments-api
+    snyk.io/project-ids: prj-payments-api
+    jira/project-key: PAYMENTS
+    backstage.io/kubernetes-id: payments-api
+  links:
+    - { title: Repository, url: "https://github.com/acme/payments-api" }
+    - { title: Dashboard, url: "https://grafana.acme.example/d/payments" }
+spec:
+  type: service
+  lifecycle: production
+  tier: "1"
+  owner: team-payments
+  system: payments
+  costCentre: CC-4410
+  repo: acme/payments-api
+  runbook: docs/payments-api-runbook.md
+  environments: [staging, production]
+  dependsOn: [fraud-scoring, resource:payments-db, resource:payments-queue]
+  providesApis: [payments-openapi]
+  actions: [restart-service, rotate-credentials]
+  scorecards: [production-readiness]
+  properties:
+    language: go
+    runtime: kubernetes
+    pci-scope: true
+    oncall-handbook: https://wiki.acme.example/payments/oncall
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: fraud-scoring
+  title: Fraud Scoring
+  description: Scores each authorisation in under 50ms using the feature store.
+  tags: [tier-1, python]
+  links:
+    - { title: Repository, url: "https://github.com/acme/fraud-scoring" }
+  annotations:
+    sonarqube.org/project-key: acme_fraud-scoring
+    sentry.io/project-slug: fraud-scoring
+    datadoghq.com/service-name: fraud-scoring
+    snyk.io/project-ids: prj-fraud-scoring
+    jira/project-key: FRAUD
+    backstage.io/kubernetes-id: fraud-scoring
+spec:
+  type: service
+  lifecycle: production
+  tier: "1"
+  owner: team-payments
+  system: payments
+  runbook: docs/fraud-scoring-runbook.md
+  dependsOn: [feature-store]
+  actions: [restart-service]
+  scorecards: [production-readiness]
+  repo: acme/fraud-scoring
+  properties:
+    language: python
+    runtime: kubernetes
+    pci-scope: true
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: ledger-writer
+  title: Ledger Writer
+  description: Consumes authorisations from Kafka and writes double-entry ledger rows.
+  tags: [tier-1, go]
+  links:
+    - { title: Repository, url: "https://github.com/acme/ledger-writer" }
+spec:
+  type: worker
+  lifecycle: production
+  tier: "1"
+  owner: team-payments
+  system: payments
+  dependsOn: [resource:payments-db, resource:payments-queue]
+  actions: [restart-service]
+  scorecards: [production-readiness]
+  repo: acme/ledger-writer
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: settlement-batch
+  title: Settlement Batch
+  description: Nightly settlement run with the acquiring bank.
+  tags: [tier-2, java]
+  links:
+    - { title: Repository, url: "https://github.com/acme/settlement-batch" }
+spec:
+  type: job
+  lifecycle: production
+  tier: "2"
+  owner: team-payments
+  system: payments
+  dependsOn: [ledger-writer]
+  scorecards: [production-readiness]
+  repo: acme/settlement-batch
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: checkout-web
+  title: Checkout Web
+  description: The storefront checkout flow. React, server rendered.
+  tags: [tier-2, typescript]
+  links:
+    - { title: Repository, url: "https://github.com/acme/checkout-web" }
+  annotations:
+    sonarqube.org/project-key: acme_checkout-web
+    sentry.io/project-slug: checkout-web
+    datadoghq.com/service-name: checkout-web
+    snyk.io/project-ids: prj-checkout-web
+    jira/project-key: CHECKOUT
+    backstage.io/kubernetes-id: checkout-web
+spec:
+  type: website
+  lifecycle: production
+  tier: "2"
+  owner: team-checkout
+  system: checkout
+  runbook: docs/checkout-overview.md
+  dependsOn: [payments-api, cart-service]
+  consumesApis: [payments-openapi]
+  actions: [restart-service]
+  scorecards: [production-readiness]
+  repo: acme/checkout-web
+  properties:
+    language: typescript
+    runtime: edge
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: cart-service
+  title: Cart Service
+  description: Holds carts and applies promotions.
+  tags: [tier-2, go]
+  links:
+    - { title: Repository, url: "https://github.com/acme/cart-service" }
+spec:
+  type: service
+  lifecycle: production
+  tier: "2"
+  owner: team-checkout
+  system: checkout
+  dependsOn: ["resource:cart-db"]
+  actions: [restart-service]
+  scorecards: [production-readiness]
+  repo: acme/cart-service
+  properties:
+    language: kotlin
+    runtime: kubernetes
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: notification-svc
+  title: Notification Service
+  description: Sends order emails and SMS.
+  tags: [tier-3, node]
+spec:
+  type: service
+  lifecycle: production
+  tier: "3"
+  owner: team-platform
+  system: platform-core
+  scorecards: [production-readiness]
+  repo: acme/notification-svc
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: auth-gateway
+  title: Auth Gateway
+  description: Edge authentication for every public service.
+  tags: [tier-1, envoy]
+  links:
+    - { title: Repository, url: "https://github.com/acme/auth-gateway" }
+spec:
+  type: service
+  lifecycle: production
+  tier: "1"
+  owner: team-platform
+  system: platform-core
+  runbook: docs/auth-gateway-runbook.md
+  actions: [restart-service, rotate-credentials]
+  scorecards: [production-readiness]
+  repo: acme/auth-gateway
+  properties:
+    language: go
+    runtime: kubernetes
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: feature-store
+  title: Feature Store
+  description: Online features for fraud and recommendations.
+  tags: [tier-2, python]
+  links:
+    - { title: Repository, url: "https://github.com/acme/feature-store" }
+spec:
+  type: service
+  lifecycle: production
+  tier: "2"
+  owner: team-data
+  system: data-platform
+  dependsOn: ["resource:warehouse"]
+  scorecards: [production-readiness]
+  repo: acme/feature-store
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: warehouse-sync
+  title: Warehouse Sync
+  description: Copies order data to the warehouse. Nobody is sure who owns it any more.
+  tags: [tier-3]
+spec:
+  type: job
+  lifecycle: production
+  tier: "3"
+  system: data-platform
+  dependsOn: ["resource:warehouse"]
+  scorecards: [production-readiness]
+  repo: acme/warehouse-sync
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Component
+metadata:
+  name: legacy-reporting
+  title: Legacy Reporting
+  description: Old reporting portal. Replaced by the warehouse dashboards.
+  tags: [tier-4, java]
+spec:
+  type: service
+  lifecycle: deprecated
+  tier: "4"
+  owner: team-data
+  system: data-platform
+  dependsOn: ["resource:warehouse"]
+  repo: acme/legacy-reporting

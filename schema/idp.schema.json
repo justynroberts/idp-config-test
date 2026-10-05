@@ -1,0 +1,3452 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idp.fintonlabs.dev/schema/v1.json",
+  "title": "IDP configuration document",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata"
+  ],
+  "oneOf": [
+    {
+      "title": "Component",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Component"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "default": "service",
+              "type": "string",
+              "enum": [
+                "service",
+                "job",
+                "worker",
+                "website",
+                "library",
+                "tool"
+              ]
+            },
+            "lifecycle": {
+              "default": "production",
+              "type": "string",
+              "enum": [
+                "experimental",
+                "production",
+                "deprecated"
+              ]
+            },
+            "tier": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "system": {
+              "type": "string"
+            },
+            "repo": {
+              "type": "string"
+            },
+            "runbook": {
+              "type": "string"
+            },
+            "environments": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "dependsOn": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "providesApis": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "consumesApis": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "actions": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "scorecards": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "API",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "API"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "default": "openapi",
+              "type": "string"
+            },
+            "lifecycle": {
+              "default": "production",
+              "type": "string",
+              "enum": [
+                "experimental",
+                "production",
+                "deprecated"
+              ]
+            },
+            "owner": {
+              "type": "string"
+            },
+            "system": {
+              "type": "string"
+            },
+            "definition": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "System",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "System"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "owner": {
+              "type": "string"
+            },
+            "domain": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Domain",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Domain"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "owner": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Resource",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Resource"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "lifecycle": {
+              "type": "string",
+              "enum": [
+                "experimental",
+                "production",
+                "deprecated"
+              ]
+            },
+            "owner": {
+              "type": "string"
+            },
+            "system": {
+              "type": "string"
+            },
+            "dependsOn": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Group",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Group"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "default": "team",
+              "type": "string"
+            },
+            "parent": {
+              "type": "string"
+            },
+            "members": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "email": {
+              "type": "string"
+            },
+            "slack": {
+              "type": "string"
+            },
+            "oncall": {
+              "type": "string"
+            },
+            "pagerduty": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "User",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "User"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "memberOf": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "roles": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "slackId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "email"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Offering",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Offering"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "category": {
+              "default": "general",
+              "type": "string"
+            },
+            "scope": {
+              "default": "global",
+              "type": "string",
+              "enum": [
+                "global",
+                "entity"
+              ]
+            },
+            "appliesTo": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            },
+            "risk": {
+              "default": "low",
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            "inputs": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "default": "string",
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "enum",
+                      "entity"
+                    ]
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "required": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "default": {},
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "pattern": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            },
+            "guardrails": {
+              "type": "object",
+              "properties": {
+                "quota": {
+                  "type": "object",
+                  "properties": {
+                    "perTeam": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "allowed": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "requiredTags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "approval": {
+              "type": "object",
+              "properties": {
+                "when": {
+                  "type": "string"
+                },
+                "approvers": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "remindAfter": {
+                  "type": "string",
+                  "pattern": "^\\d+(m|h|d)$"
+                },
+                "escalateAfter": {
+                  "type": "string",
+                  "pattern": "^\\d+(m|h|d)$"
+                },
+                "escalateTo": {
+                  "type": "string"
+                }
+              }
+            },
+            "steps": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "uses": {
+                    "type": "string"
+                  },
+                  "with": {
+                    "default": {},
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "when": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "uses"
+                ]
+              }
+            },
+            "produces": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "cost": {
+              "type": "object",
+              "properties": {
+                "monthly": {
+                  "type": "number"
+                },
+                "base": {
+                  "type": "number"
+                },
+                "by": {
+                  "type": "object",
+                  "properties": {
+                    "input": {
+                      "type": "string"
+                    },
+                    "values": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "required": [
+                    "input",
+                    "values"
+                  ]
+                }
+              }
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Role",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Role"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "subjects": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "grants": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "effect": {
+                    "default": "allow",
+                    "type": "string",
+                    "enum": [
+                      "allow",
+                      "deny"
+                    ]
+                  },
+                  "actions": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": {
+                    "default": {},
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "conditions": {
+                    "type": "string"
+                  },
+                  "approval": {
+                    "type": "object",
+                    "properties": {
+                      "when": {
+                        "type": "string"
+                      },
+                      "approvers": {
+                        "default": [],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "remindAfter": {
+                        "type": "string",
+                        "pattern": "^\\d+(m|h|d)$"
+                      },
+                      "escalateAfter": {
+                        "type": "string",
+                        "pattern": "^\\d+(m|h|d)$"
+                      },
+                      "escalateTo": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "actions"
+                ]
+              }
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Policy",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Policy"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "effect": {
+              "default": "allow",
+              "type": "string",
+              "enum": [
+                "allow",
+                "deny"
+              ]
+            },
+            "subjects": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "actions": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "resources": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "conditions": {
+              "type": "string"
+            },
+            "approval": {
+              "type": "object",
+              "properties": {
+                "when": {
+                  "type": "string"
+                },
+                "approvers": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "remindAfter": {
+                  "type": "string",
+                  "pattern": "^\\d+(m|h|d)$"
+                },
+                "escalateAfter": {
+                  "type": "string",
+                  "pattern": "^\\d+(m|h|d)$"
+                },
+                "escalateTo": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "actions"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Scorecard",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Scorecard"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "applies": {
+              "default": {},
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "lifecycle": {
+                  "type": "string"
+                }
+              }
+            },
+            "rules": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "when": {
+                    "type": "string"
+                  },
+                  "weight": {
+                    "default": 1,
+                    "type": "number"
+                  },
+                  "level": {
+                    "type": "string"
+                  },
+                  "fix": {
+                    "type": "object",
+                    "properties": {
+                      "offering": {
+                        "type": "string"
+                      },
+                      "hint": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "when"
+                ]
+              }
+            },
+            "levels": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            },
+            "exemptions": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "until": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "entity",
+                  "rule",
+                  "reason"
+                ]
+              }
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "McpServer",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "McpServer"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "transport": {
+              "default": "streamable-http",
+              "type": "string",
+              "enum": [
+                "streamable-http",
+                "stdio"
+              ]
+            },
+            "url": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            },
+            "args": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "auth": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "default": "none",
+                  "type": "string",
+                  "enum": [
+                    "bearer",
+                    "none"
+                  ]
+                },
+                "secretEnv": {
+                  "type": "string"
+                }
+              }
+            },
+            "tools": {
+              "default": {
+                "allow": [],
+                "requireApproval": []
+              },
+              "type": "object",
+              "properties": {
+                "allow": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "requireApproval": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "rateLimit": {
+              "type": "object",
+              "properties": {
+                "perMinute": {
+                  "default": 60,
+                  "type": "number"
+                }
+              }
+            },
+            "exposeAs": {
+              "default": "tools",
+              "type": "string",
+              "enum": [
+                "facts",
+                "tools"
+              ]
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Agent",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Agent"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "goal": {
+              "type": "string"
+            },
+            "handler": {
+              "type": "string"
+            },
+            "tools": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "autonomy": {
+              "default": "propose",
+              "type": "string",
+              "enum": [
+                "read",
+                "propose",
+                "approve"
+              ]
+            },
+            "schedule": {
+              "type": "string"
+            },
+            "budget": {
+              "type": "object",
+              "properties": {
+                "steps": {
+                  "default": 20,
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "required": [
+            "goal"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "EventRule",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "EventRule"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "on": {
+              "type": "string"
+            },
+            "when": {
+              "type": "string"
+            },
+            "run": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "notify",
+                    "agent",
+                    "suggestion"
+                  ]
+                },
+                "agent": {
+                  "type": "string"
+                },
+                "channel": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          },
+          "required": [
+            "on",
+            "run"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "HomeLayout",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "HomeLayout"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "appliesTo": {
+              "default": [
+                "*"
+              ],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "widgets": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "size": {
+                    "type": "string"
+                  },
+                  "params": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "DiscoveryProvider",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "DiscoveryProvider"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "kubernetes",
+                "github",
+                "pagerduty",
+                "otel"
+              ]
+            },
+            "path": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "tokenEnv": {
+              "type": "string"
+            },
+            "org": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "ChatWorkspace",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "ChatWorkspace"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "default": "slack",
+              "type": "string",
+              "enum": [
+                "slack"
+              ]
+            },
+            "features": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "identity": {
+              "type": "object",
+              "properties": {
+                "match": {
+                  "default": "email",
+                  "type": "string"
+                }
+              }
+            },
+            "defaults": {
+              "type": "object",
+              "properties": {
+                "replies": {
+                  "default": "private",
+                  "type": "string",
+                  "enum": [
+                    "private",
+                    "channel"
+                  ]
+                }
+              }
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "ChatChannel",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "ChatChannel"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "workspace": {
+              "type": "string"
+            },
+            "channel": {
+              "type": "string"
+            },
+            "team": {
+              "type": "string"
+            },
+            "digest": {
+              "type": "object",
+              "properties": {
+                "weekly": {
+                  "type": "string",
+                  "pattern": "^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)-\\d{1,2}:\\d{2}$"
+                },
+                "daily": {
+                  "type": "string",
+                  "pattern": "^\\d{1,2}:\\d{2}$"
+                }
+              }
+            },
+            "alerts": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "on": {
+                        "type": "string"
+                      },
+                      "when": {
+                        "type": "string"
+                      },
+                      "scope": {
+                        "default": "team",
+                        "type": "string",
+                        "enum": [
+                          "team",
+                          "all"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "on"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "workspace",
+            "channel"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Source",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Source"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "pagerduty",
+                "github-teams",
+                "scim",
+                "aws"
+              ]
+            },
+            "mode": {
+              "default": "source",
+              "type": "string",
+              "enum": [
+                "source",
+                "suggest"
+              ]
+            },
+            "schedule": {
+              "default": "every 30m",
+              "type": "string",
+              "pattern": "^every \\d+(m|h)$"
+            },
+            "options": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Property",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Property"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "appliesTo": {
+              "default": [
+                "Component"
+              ],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "type": {
+              "default": "string",
+              "type": "string",
+              "enum": [
+                "string",
+                "number",
+                "boolean",
+                "enum",
+                "url",
+                "date",
+                "list"
+              ]
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "unit": {
+              "type": "string"
+            },
+            "source": {
+              "default": "git",
+              "type": "string",
+              "enum": [
+                "git",
+                "api"
+              ]
+            },
+            "showInCatalog": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Initiative",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Initiative"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "scorecard": {
+              "type": "string"
+            },
+            "target": {
+              "type": "object",
+              "properties": {
+                "level": {
+                  "type": "string"
+                },
+                "rules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "deadline": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "scope": {
+              "default": {},
+              "type": "object",
+              "properties": {
+                "system": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "tier": {
+                  "type": "string"
+                },
+                "lifecycle": {
+                  "type": "string"
+                },
+                "tag": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "scorecard",
+            "target",
+            "deadline"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "CustomKind",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "CustomKind"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Za-z0-9]{1,40}$"
+            },
+            "plural": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "catalog": {
+              "default": true,
+              "type": "boolean"
+            },
+            "properties": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "pattern": "^[a-z][a-zA-Z0-9]*$"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "default": "string",
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "enum",
+                      "url",
+                      "date",
+                      "list"
+                    ]
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "required": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "relations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "pattern": "^[a-z][a-zA-Z0-9]*$"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "many": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "required": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "inverse": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "to"
+                ]
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    },
+    {
+      "title": "Connector",
+      "properties": {
+        "apiVersion": {
+          "enum": [
+            "idp.fintonlabs.dev/v1",
+            "backstage.io/v1alpha1",
+            "backstage.io/v1beta1"
+          ]
+        },
+        "kind": {
+          "const": "Connector"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
+            },
+            "namespace": {
+              "default": "default",
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "labels": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "annotations": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "links": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "icon": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": {}
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "sonarqube",
+                "sentry",
+                "datadog",
+                "snyk",
+                "jira",
+                "kubernetes"
+              ]
+            },
+            "schedule": {
+              "default": "every 1h",
+              "type": "string",
+              "pattern": "^every \\d+(m|h)$"
+            },
+            "options": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
+      ]
+    }
+  ]
+}

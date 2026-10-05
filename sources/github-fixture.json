@@ -1,0 +1,12 @@
+{
+  "/orgs/acme/teams": [
+    { "id": 101, "slug": "mobile", "name": "Mobile", "description": "iOS and Android apps" },
+    { "id": 102, "slug": "mobile-ios", "name": "Mobile iOS", "description": "The iOS app", "parent": { "slug": "mobile" } }
+  ],
+  "/orgs/acme/teams/mobile/members": [{ "login": "Hana-K" }],
+  "/orgs/acme/teams/mobile-ios/members": [{ "login": "Hana-K" }, { "login": "ivo" }],
+  "/graphql": { "data": { "organization": { "membersWithRole": { "pageInfo": { "hasNextPage": false, "endCursor": null }, "nodes": [
+    { "login": "Hana-K", "name": "Hana Kobayashi", "organizationVerifiedDomainEmails": ["hana@acme.example"] },
+    { "login": "ivo", "name": "Ivo Petrov", "organizationVerifiedDomainEmails": [] }
+  ] } } } }
+}

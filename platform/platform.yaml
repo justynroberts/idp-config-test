@@ -1,0 +1,311 @@
+apiVersion: idp.fintonlabs.dev/v1
+kind: McpServer
+metadata: { name: idp-self, description: This portal's own MCP server, connected in-process. Shows how any MCP server becomes an integration. }
+spec:
+  transport: streamable-http
+  url: "idp://self"
+  tools: { allow: [search_catalog, get_entity, get_owner, get_dependencies], requireApproval: [] }
+  rateLimit: { perMinute: 120 }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Agent
+metadata: { name: catalog-curator, title: Catalog curator }
+spec:
+  goal: Find services that are running but not catalogued, and propose entities with an owner, as pull requests.
+  handler: catalog-curator
+  autonomy: propose
+  tools: [discovery.run, entity.propose]
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Agent
+metadata: { name: hygiene, title: Hygiene agent }
+spec:
+  goal: Flag ownerless services, stale entities and dead runbook links, and nudge owners.
+  handler: hygiene
+  autonomy: propose
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: EventRule
+metadata: { name: ownerless-service }
+spec:
+  on: catalog.entity.created
+  when: "payload.kind == 'Component' && !payload.owner.exists()"
+  run: { type: notify, channel: "#platform", message: "New component {{ payload.ref }} has no owner." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: EventRule
+metadata: { name: new-suggestions }
+spec:
+  on: discovery.suggestions.created
+  run: { type: notify, channel: "#platform", message: "{{ payload.count }} new discovery suggestions are waiting for review." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: EventRule
+metadata: { name: failed-deployment }
+spec:
+  on: deployment.failed
+  run: { type: notify, channel: "#deploys", message: "Deploy of {{ payload.name }} {{ payload.version }} to {{ payload.environment }} failed: {{ payload.url }}" }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: EventRule
+metadata: { name: production-deploy }
+spec:
+  on: deployment.succeeded
+  when: "payload.environment == 'production' && payload.lifecycle == 'production'"
+  run: { type: notify, channel: "#deploys", message: "{{ payload.name }} {{ payload.version }} is live in production." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: HomeLayout
+metadata: { name: default }
+spec:
+  appliesTo: ["*"]
+  widgets:
+    - { type: my-services, title: My services }
+    - { type: approvals, title: Waiting on me }
+    - { type: my-requests, title: My requests }
+    - { type: deployments, title: Recent deployments }
+    - { type: scorecard-trend, title: Readiness }
+    - { type: assistant-suggestions, title: Ask }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: HomeLayout
+metadata: { name: sre }
+spec:
+  appliesTo: [group:sre]
+  widgets:
+    - { type: approvals, title: Waiting on me }
+    - { type: on-call, title: On call }
+    - { type: deployments, title: Recent deployments }
+    - { type: ownerless, title: Without an owner }
+    - { type: scorecard-trend, title: Readiness }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: HomeLayout
+metadata: { name: platform }
+spec:
+  appliesTo: [group:team-platform]
+  widgets:
+    - { type: discovery-inbox, title: Discovery inbox }
+    - { type: approvals, title: Waiting on me }
+    - { type: deployments, title: Recent deployments }
+    - { type: ownerless, title: Without an owner }
+    - { type: scorecard-trend, title: Readiness }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: ChatWorkspace
+metadata: { name: acme-slack }
+spec:
+  provider: slack
+  features: [ask, lookup, self-service, approvals, incidents, digests]
+  identity: { match: email }
+  defaults: { replies: private }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: ChatChannel
+metadata: { name: payments-eng }
+spec:
+  workspace: acme-slack
+  channel: "#payments-eng"
+  team: team-payments
+  digest: { weekly: monday-09:00 }
+  # Plain names are event patterns. A team channel only hears about its own team's services
+  # unless scope is "all"; `when` narrows further with an expression over payload and entity.
+  alerts:
+    - scorecard.failed
+    - request.failed
+    - deployment.failed
+    - { on: deployment.succeeded, when: "payload.environment == 'production'" }
+    - { on: initiative.*, scope: all }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: ChatChannel
+metadata: { name: sre-firehose, description: Every failed deploy and rollback, whoever owns it. }
+spec:
+  workspace: acme-slack
+  channel: "#sre"
+  alerts: [deployment.failed, deployment.rolled_back, source.failed, request.escalated]
+  digest: { weekly: friday-16:00 }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: DiscoveryProvider
+metadata: { name: k8s-prod }
+spec: { type: kubernetes, path: ../discovery/k8s.json }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: DiscoveryProvider
+metadata: { name: github-acme }
+spec: { type: github, path: ../discovery/github.json, org: acme }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: DiscoveryProvider
+metadata: { name: pagerduty }
+spec: { type: pagerduty, path: ../discovery/pagerduty.json }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: DiscoveryProvider
+metadata: { name: traces }
+spec: { type: otel, path: ../discovery/otel-edges.json }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Source
+metadata: { name: pagerduty, description: Services, teams and dependencies from PagerDuty. In production remove `fixture` and set IDP_PAGERDUTY_TOKEN. }
+spec:
+  type: pagerduty
+  mode: source
+  schedule: every 30m
+  options: { fixture: sources/pagerduty-fixture.json, teamPrefix: team- }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Source
+metadata: { name: github-teams, description: Teams and members from the acme GitHub org, offered for review. Remove `fixture` and set GITHUB_TOKEN for real. }
+spec:
+  type: github-teams
+  mode: suggest
+  schedule: every 1h
+  options: { org: acme, fixture: sources/github-fixture.json }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Source
+metadata: { name: okta, description: People and groups provisioned by Okta (or Entra ID) over SCIM. }
+spec:
+  type: scim
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: coverage, title: Test coverage, description: Line coverage from the main branch build, pushed by CI. }
+spec: { appliesTo: [Component], type: number, unit: "%", source: api, showInCatalog: true }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: language, title: Language }
+spec: { appliesTo: [Component], type: enum, values: [go, java, kotlin, python, typescript], showInCatalog: true }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: runtime, title: Runtime }
+spec: { appliesTo: [Component], type: enum, values: [kubernetes, lambda, vm, edge] }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: pci-scope, title: In PCI scope, description: Handles card data, so changes need the PCI checklist. }
+spec: { appliesTo: [Component, Resource], type: boolean }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: oncall-handbook, title: On-call handbook }
+spec: { appliesTo: [Component], type: url }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Initiative
+metadata: { name: tier1-silver, title: Every tier 1 service at Silver, description: "Before peak season: an owner, a runbook, an on-call rotation and a repo link for everything tier 1." }
+spec:
+  scorecard: production-readiness
+  target: { level: Silver }
+  deadline: "2026-12-31"
+  owner: team-platform
+  scope: { tier: "1" }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: EventRule
+metadata: { name: initiative-reminder }
+spec:
+  on: initiative.due_soon
+  run: { type: notify, channel: "#platform", message: "{{ payload.title }}: {{ payload.failing }} services still below {{ payload.target }}, {{ payload.daysLeft }} days left." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Connector
+metadata: { name: sonarqube, description: "Coverage, quality gate and issues from SonarQube Cloud. Remove `fixture` and set IDP_SONARQUBE_TOKEN." }
+spec: { type: sonarqube, schedule: every 1h, options: { url: "https://sonarcloud.io", fixture: sources/connectors-fixture.json } }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Connector
+metadata: { name: sentry, description: Unresolved and new errors from Sentry. }
+spec: { type: sentry, schedule: every 30m, options: { org: acme, fixture: sources/connectors-fixture.json } }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Connector
+metadata: { name: datadog, description: Monitors and how many are alerting. }
+spec: { type: datadog, schedule: every 15m, options: { site: datadoghq.eu, fixture: sources/connectors-fixture.json } }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Connector
+metadata: { name: snyk, description: Open critical and high vulnerabilities. }
+spec: { type: snyk, schedule: every 6h, options: { orgId: acme-org, fixture: sources/connectors-fixture.json } }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Connector
+metadata: { name: jira, description: Open bugs and issues per project. }
+spec: { type: jira, schedule: every 1h, options: { url: "https://acme.atlassian.net", fixture: sources/connectors-fixture.json } }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Connector
+metadata: { name: kubernetes, description: What is running, read live from the cluster. }
+spec: { type: kubernetes, schedule: every 5m, options: { fixture: sources/connectors-fixture.json } }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Source
+metadata: { name: aws, description: "Owned resources from AWS (tagged team or owner). Remove `fixture` and set AWS credentials." }
+spec:
+  type: aws
+  mode: suggest
+  schedule: every 6h
+  options: { regions: [eu-west-1], teamPrefix: team-, fixture: sources/aws-fixture.json }
+
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: qualityGate, title: Quality gate }
+spec: { appliesTo: [Component], type: enum, source: api, values: [OK, WARN, ERROR, NONE], showInCatalog: true }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: sonarBugs, title: Bugs }
+spec: { appliesTo: [Component], type: number, source: api }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: sentryUnresolved, title: Unresolved errors }
+spec: { appliesTo: [Component], type: number, source: api, showInCatalog: true }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: datadogAlerting, title: Monitors alerting }
+spec: { appliesTo: [Component], type: number, source: api }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: snykCritical, title: Critical vulnerabilities }
+spec: { appliesTo: [Component], type: number, source: api, showInCatalog: true }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: snykHigh, title: High vulnerabilities }
+spec: { appliesTo: [Component], type: number, source: api }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: jiraOpenBugs, title: Open bugs }
+spec: { appliesTo: [Component], type: number, source: api }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: k8sHealthy, title: All replicas ready }
+spec: { appliesTo: [Component], type: boolean, source: api }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Property
+metadata: { name: k8sImage, title: Running image }
+spec: { appliesTo: [Component], type: string, source: api }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Scorecard
+metadata: { name: code-health, title: Code health, description: "From the connectors. Attach it to a service with spec.scorecards to use it." }
+spec:
+  applies: { kind: Component }
+  rules:
+    - { id: quality-gate, title: Quality gate passes, when: "props.qualityGate == 'OK'", weight: 3 }
+    - { id: no-critical-vulns, title: No critical vulnerabilities, when: "props.snykCritical == 0", weight: 3 }
+    - { id: errors-under-control, title: Fewer than 50 unresolved errors, when: "props.sentryUnresolved < 50", weight: 2 }
+    - { id: no-alerting-monitors, title: No monitors alerting, when: "props.datadogAlerting == 0", weight: 1 }
+    - { id: replicas-ready, title: All replicas ready, when: "props.k8sHealthy == true", weight: 1 }
+

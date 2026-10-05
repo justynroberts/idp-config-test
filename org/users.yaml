@@ -1,0 +1,39 @@
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: alice }
+spec: { email: alice@acme.example, displayName: Alice Morgan, memberOf: [team-payments], slackId: U01ALICE }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: bob }
+spec: { email: bob@acme.example, displayName: Bob Singh, memberOf: [team-checkout], slackId: U02BOB }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: carol }
+spec: { email: carol@acme.example, displayName: Carol Davies, memberOf: [team-platform], roles: [admin], slackId: U03CAROL }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: dave }
+spec: { email: dave@acme.example, displayName: Dave Okafor, memberOf: [sre, team-platform], slackId: U04DAVE }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: erin }
+spec: { email: erin@acme.example, displayName: Erin Walsh, memberOf: [team-data], slackId: U05ERIN }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: frank }
+spec: { email: frank@acme.example, displayName: Frank Lee (new joiner), memberOf: [team-checkout] }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: grace }
+spec: { email: grace@acme.example, displayName: Grace Turner, memberOf: [finance] }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: User
+metadata: { name: release-bot, description: Identity for CI/CD pipelines. Mint it a token scoped to deployment.report. }
+spec: { email: release-bot@acme.example, displayName: Release bot, memberOf: [team-platform] }

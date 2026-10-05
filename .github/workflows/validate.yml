@@ -1,0 +1,40 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate with the portal's own loader
+        env:
+          IMAGE: ghcr.io/${{ vars.IDP_IMAGE_OWNER || 'justynroberts' }}/idp:${{ vars.IDP_VERSION || 'latest' }}
+        run: |
+          # Until the portal image is published (or if it is private), say so instead of failing every change.
+          if ! docker pull -q "$IMAGE" > /dev/null 2>&1; then
+            echo "::warning title=Validation skipped::Could not pull $IMAGE. Publish the portal image, or set the IDP_IMAGE_OWNER and IDP_VERSION repository variables to one this repository can pull."
+            exit 0
+          fi
+          docker run --rm -v "$PWD:/config:ro" "$IMAGE" validate /config
+
+  # Optional: if the push webhook is not set up, nudge the portal to pull now.
+  sync-portal:
+    if: github.event_name == 'push' && vars.IDP_URL != ''
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Ask the portal to sync
+        env:
+          IDP_URL: ${{ vars.IDP_URL }}
+          IDP_TOKEN: ${{ secrets.IDP_SYNC_TOKEN }}
+        run: |
+          curl -fsS -X POST "${IDP_URL%/}/api/sync" -H "authorization: Bearer $IDP_TOKEN" -o /dev/null

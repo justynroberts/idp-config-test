@@ -1,0 +1,39 @@
+# A kind this portal does not ship with, defined here: environments, with typed fields and links to
+# the services that run in them. Add your own the same way (Configure, CustomKind).
+apiVersion: idp.fintonlabs.dev/v1
+kind: CustomKind
+metadata: { name: environment, title: Environment, description: Where services run. }
+spec:
+  kind: Environment
+  plural: Environments
+  icon: globe
+  properties:
+    region: { type: enum, values: [eu-west-1, eu-west-2, us-east-1], required: true, title: Cloud region }
+    cluster: { type: string, title: Kubernetes cluster }
+    customerFacing: { type: boolean, title: Customer facing }
+    dashboard: { type: url, title: Dashboard }
+  relations:
+    runs: { to: [Component], title: Runs, inverse: Runs in }
+    dependsOnEnv: { to: [Environment], many: false, title: Promotes from, inverse: Promotes to }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Environment
+metadata: { name: production, title: Production, description: Live traffic. Changes go through staging first. }
+spec:
+  owner: team-platform
+  region: eu-west-1
+  cluster: prod-eu-1
+  customerFacing: true
+  dashboard: https://grafana.acme.example/d/prod
+  runs: [payments-api, fraud-scoring, checkout-web, cart-service, auth-gateway]
+  dependsOnEnv: staging
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Environment
+metadata: { name: staging, title: Staging }
+spec:
+  owner: team-platform
+  region: eu-west-1
+  cluster: staging-eu-1
+  customerFacing: false
+  runs: [payments-api, fraud-scoring, checkout-web, cart-service, auth-gateway, feature-store]

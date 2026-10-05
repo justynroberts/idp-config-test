@@ -1,0 +1,24 @@
+apiVersion: idp.fintonlabs.dev/v1
+kind: Domain
+metadata: { name: commerce, description: Everything involved in taking an order and getting paid. }
+spec: { owner: eng-commerce }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: System
+metadata: { name: checkout, description: Cart, checkout flow and order capture. }
+spec: { owner: team-checkout, domain: commerce }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: System
+metadata: { name: payments, description: Card payments, fraud scoring and the ledger. }
+spec: { owner: team-payments, domain: commerce }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: System
+metadata: { name: platform-core, description: Identity, gateways and shared runtime. }
+spec: { owner: team-platform }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: System
+metadata: { name: data-platform, description: Warehouse, features and reporting. }
+spec: { owner: team-data }

@@ -1,0 +1,23 @@
+apiVersion: idp.fintonlabs.dev/v1
+kind: Scorecard
+metadata: { name: production-readiness, title: Production readiness }
+spec:
+  applies: { kind: Component }
+  rules:
+    - { id: has-owner, level: Bronze, title: Has an owning team, when: "entity.spec.owner.exists()", weight: 3, fix: { hint: Set spec.owner, offering: "" } }
+    - { id: has-description, level: Bronze, title: Has a description, when: "entity.metadata.description.exists()", weight: 1 }
+    - { id: has-runbook, level: Silver, title: Has a runbook, when: "entity.spec.runbook.exists() || docs > 0", weight: 3, fix: { hint: "Add spec.runbook or a docs/*.md file with `entity:` front matter" } }
+    - { id: has-tier, level: Bronze, title: Tier is set, when: "entity.spec.tier.exists()", weight: 1 }
+    - { id: has-oncall, level: Silver, title: Owning team has an on-call rotation, when: "owner.spec.oncall.exists()", weight: 3, fix: { hint: Set spec.oncall on the owning Group } }
+    - { id: has-repo-link, level: Silver, title: Links to its repository, when: "entity.metadata.links.size() > 0", weight: 1 }
+    - { id: no-deprecated-deps, level: Gold, title: Does not depend on deprecated services, when: "deprecatedDeps == 0", weight: 2 }
+    - { id: tier1-has-dependents-known, level: Gold, title: Tier 1 services declare their dependencies, when: "entity.spec.tier != '1' || dependencies > 0 || entity.spec.type == 'worker'", weight: 1 }
+    - { id: deployed-recently, level: Gold, title: Shipped in the last 30 days, when: "entity.spec.lifecycle != 'production' || deployments.daysSinceLast <= 30", weight: 1, fix: { hint: "Report deployments from CI with the report-deployment action" } }
+    - { id: low-change-failure, level: Gold, title: Fewer than 20% of deploys fail, when: "deployments.failureRate30d < 0.2", weight: 2 }
+    - { id: test-coverage, level: Gold, title: Test coverage at least 80%, when: "props.coverage >= 80", weight: 2, fix: { hint: "Push coverage from CI: POST /api/properties with { entity, values: { coverage } }" } }
+  levels:
+    - { name: Bronze, description: Someone owns it and you can tell what it is }
+    - { name: Silver, description: Someone can operate it at 3am }
+    - { name: Gold, description: It changes safely and often }
+  exemptions:
+    - { entity: warehouse-sync, rule: has-runbook, reason: Being replaced by inventory-sync in Q1, until: "2027-03-31" }

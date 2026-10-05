@@ -1,0 +1,217 @@
+apiVersion: idp.fintonlabs.dev/v1
+kind: Offering
+metadata: { name: new-service, title: New service, description: A catalogued service with an owner from day one. }
+spec:
+  category: golden-path
+  risk: low
+  inputs:
+    - { name: name, type: string, required: true, pattern: "^[a-z][a-z0-9-]{2,40}$", description: Lowercase, dashes allowed }
+    - { name: description, type: string, required: true }
+    - { name: language, type: enum, values: [go, typescript, python, java], default: go }
+    - { name: owner, type: entity, kind: Group, required: true }
+    - { name: system, type: entity, kind: System, required: true }
+    - { name: tier, type: enum, values: ["1", "2", "3"], default: "3" }
+  guardrails:
+    quota: { perTeam: 5 }
+  approval:
+    when: "inputs.tier == '1'"
+    approvers: [group:team-platform]
+  steps:
+    # Creates acme/<name> from the language template. Simulated until GITHUB_TOKEN is set.
+    - id: create-repo
+      uses: github/repo
+      with: { owner: acme, name: "{{ inputs.name }}", template: "acme/service-template-{{ inputs.language }}", description: "{{ inputs.description }}" }
+    - id: register
+      uses: git/pr
+      with:
+        autoMerge: true
+        title: "Add service {{ inputs.name }}"
+        entity:
+          apiVersion: idp.fintonlabs.dev/v1
+          kind: Component
+          metadata:
+            name: "{{ inputs.name }}"
+            description: "{{ inputs.description }}"
+            tags: ["tier-{{ inputs.tier }}", "{{ inputs.language }}", "self-service"]
+            links: [{ title: Repository, url: "https://github.com/acme/{{ inputs.name }}" }]
+          spec:
+            type: service
+            lifecycle: experimental
+            tier: "{{ inputs.tier }}"
+            owner: "{{ inputs.owner }}"
+            system: "{{ inputs.system }}"
+            repo: "acme/{{ inputs.name }}"
+            scorecards: [production-readiness]
+    - id: tell-team
+      uses: notify
+      with: { channel: "{{ inputs.owner }}", message: "Service {{ inputs.name }} is in the catalog. Next: add a runbook and a repo link." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Offering
+metadata: { name: postgres-database, title: Postgres database, description: A managed Postgres instance registered against your service. }
+spec:
+  category: data
+  risk: medium
+  inputs:
+    - { name: service, type: entity, kind: Component, required: true }
+    - { name: env, type: enum, values: [dev, staging, prod], default: dev }
+    - { name: size, type: enum, values: [small, medium, large], default: small }
+    - { name: region, type: enum, values: [eu-west-1, eu-west-2], default: eu-west-1 }
+  guardrails:
+    quota: { perTeam: 10 }
+    allowed: { region: [eu-west-1, eu-west-2] }
+  approval:
+    when: "inputs.env == 'prod'"
+    approvers: [group:team-platform]
+  cost:
+    base: 25
+    by: { input: size, values: { small: 15, medium: 95, large: 375 } }
+  steps:
+    - id: risk
+      uses: ai/summarise-risk
+    - id: provision
+      uses: runner/job
+      with: { job: provision-postgres, args: { service: "{{ inputs.service }}", env: "{{ inputs.env }}", size: "{{ inputs.size }}", region: "{{ inputs.region }}" } }
+    - id: register
+      uses: git/pr
+      with:
+        autoMerge: true
+        title: "Register database for {{ inputs.service }} ({{ inputs.env }})"
+        entity:
+          apiVersion: idp.fintonlabs.dev/v1
+          kind: Resource
+          metadata: { name: "{{ inputs.service }}-{{ inputs.env }}-pg", description: "Postgres for {{ inputs.service }} in {{ inputs.env }}", tags: [postgres, self-service] }
+          spec: { type: database, owner: "{{ resolved.service.owner }}", lifecycle: "{{ inputs.env == 'prod' ? 'production' : 'experimental' }}" }
+    - id: tell
+      uses: notify
+      with: { channel: "{{ resolved.service.owner }}", message: "Database for {{ inputs.service }} ({{ inputs.env }}) is ready." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Offering
+metadata: { name: restart-service, title: Restart, description: Rolling restart of a service or worker. }
+spec:
+  category: day-two
+  scope: entity
+  appliesTo: { kind: Component }
+  risk: medium
+  inputs:
+    - { name: reason, type: string, required: true }
+  approval:
+    when: "resource.lifecycle == 'production' && resource.tier == '1'"
+    approvers: [group:sre]
+    remindAfter: 30m
+    escalateAfter: 2h
+    escalateTo: "#incident-command"
+  steps:
+    - id: restart
+      uses: runner/job
+      with: { job: rolling-restart, args: { service: "{{ entity.metadata.name }}", reason: "{{ inputs.reason }}" } }
+    - id: tell
+      uses: notify
+      with: { channel: "{{ entity.owner }}", message: "{{ entity.metadata.name }} restarted by {{ requester }}: {{ inputs.reason }}" }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Offering
+metadata: { name: rotate-credentials, title: Rotate credentials, description: Rotate service credentials and restart consumers. }
+spec:
+  category: day-two
+  scope: entity
+  appliesTo: { kind: Component }
+  risk: high
+  inputs:
+    - { name: reason, type: string, required: true }
+  approval:
+    approvers: [group:sre]
+  steps:
+    - id: risk
+      uses: ai/summarise-risk
+    # A Rundeck / PagerDuty Process Automation job. Simulated until IDP_RUNDECK_URL and IDP_RUNDECK_TOKEN are set.
+    - id: rotate
+      uses: rundeck/job
+      with: { job: 3f6b2a1e-7c4d-4e0a-9b8f-rotate000001, options: { service: "{{ entity.metadata.name }}", reason: "{{ inputs.reason }}" }, wait: true }
+    - id: tell
+      uses: notify
+      with: { channel: "{{ entity.owner }}", message: "Credentials for {{ entity.metadata.name }} rotated." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Offering
+metadata: { name: request-access, title: Request access, description: Time-boxed access to a resource owned by another team. }
+spec:
+  category: access
+  risk: medium
+  inputs:
+    - { name: resource, type: entity, kind: Resource, required: true }
+    - { name: duration, type: enum, values: [4h, 1d, 7d], default: 1d }
+    - { name: justification, type: string, required: true }
+  approval:
+    approvers: [group:sre]
+  steps:
+    - id: grant
+      uses: runner/job
+      with: { job: grant-access, args: { resource: "{{ inputs.resource }}", duration: "{{ inputs.duration }}", who: "{{ requester }}" } }
+    - id: record
+      uses: log
+      with: { message: "{{ requester }} granted {{ inputs.duration }} access to {{ inputs.resource }}: {{ inputs.justification }}" }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Offering
+metadata: { name: deploy, title: Deploy a version, description: Runs the service's deploy workflow in GitHub Actions and records the result. }
+spec:
+  category: day-two
+  scope: entity
+  appliesTo: { kind: Component }
+  risk: medium
+  inputs:
+    - { name: environment, type: enum, values: [staging, production], default: staging }
+    - { name: version, type: string, required: true, description: Git tag or commit to deploy }
+  approval:
+    when: "inputs.environment == 'production' && resource.tier == '1'"
+    approvers: [group:sre]
+  steps:
+    # Simulated until GITHUB_TOKEN is set. The workflow reports back with the report-deployment action.
+    - id: dispatch
+      uses: github/dispatch
+      with: { repo: "{{ entity.spec.repo }}", workflow: deploy.yml, ref: main, inputs: { environment: "{{ inputs.environment }}", version: "{{ inputs.version }}" } }
+    - id: tell
+      uses: notify
+      with: { channel: "#deploys", message: "{{ requester }} started a deploy of {{ entity.metadata.name }} {{ inputs.version }} to {{ inputs.environment }}." }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Offering
+metadata: { name: scaffold-service, title: New service from a skeleton, description: "A working repo (code, CI, Dockerfile, runbook, API contract) rendered from templates/service-node and registered in the catalog." }
+spec:
+  category: golden-path
+  risk: low
+  inputs:
+    - { name: name, type: string, required: true, pattern: "^[a-z][a-z0-9-]{2,40}$", description: Lowercase, dashes allowed }
+    - { name: description, type: string, required: true }
+    - { name: owner, type: entity, kind: Group, required: true }
+    - { name: system, type: entity, kind: System, required: true }
+  guardrails:
+    quota: { perTeam: 5 }
+  steps:
+    - id: render
+      uses: template/render
+      with: { skeleton: service-node }
+    # Creates acme/<name> with the rendered files as its first commit. Simulated until GITHUB_TOKEN is set.
+    - id: publish
+      uses: github/publish
+      with: { owner: acme, name: "{{ inputs.name }}", description: "{{ inputs.description }}", from: "{{ steps.render.bundle }}", topics: [self-service] }
+    - id: register
+      uses: catalog/register
+      with:
+        autoMerge: true
+        title: "Add service {{ inputs.name }}"
+        entity:
+          apiVersion: idp.fintonlabs.dev/v1
+          kind: Component
+          metadata:
+            name: "{{ inputs.name }}"
+            description: "{{ inputs.description }}"
+            tags: [node, self-service]
+            links: [{ title: Repository, url: "https://github.com/acme/{{ inputs.name }}" }]
+          spec: { type: service, lifecycle: experimental, owner: "{{ inputs.owner }}", system: "{{ inputs.system }}", repo: "acme/{{ inputs.name }}", scorecards: [production-readiness] }
+    - id: tell
+      uses: notify
+      with: { channel: owner, message: "{{ inputs.name }} is ready: https://github.com/acme/{{ inputs.name }}" }
+

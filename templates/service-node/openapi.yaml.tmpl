@@ -1,0 +1,5 @@
+openapi: 3.0.3
+info: { title: "{{ values.name }}", version: 0.1.0, description: "{{ values.description }}" }
+paths:
+  /health:
+    get: { summary: Liveness, responses: { '200': { description: Healthy } } }

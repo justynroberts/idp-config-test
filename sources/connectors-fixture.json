@@ -1,0 +1,755 @@
+{
+ "sonarqube": {
+  "/api/measures/component?component=acme_payments-api&metricKeys=coverage,alert_status,bugs,vulnerabilities,code_smells": {
+   "component": {
+    "key": "acme_payments-api",
+    "measures": [
+     {
+      "metric": "coverage",
+      "value": "84.2"
+     },
+     {
+      "metric": "alert_status",
+      "value": "OK"
+     },
+     {
+      "metric": "bugs",
+      "value": "2"
+     },
+     {
+      "metric": "vulnerabilities",
+      "value": "0"
+     },
+     {
+      "metric": "code_smells",
+      "value": "41"
+     }
+    ]
+   }
+  },
+  "/api/measures/component?component=acme_checkout-web&metricKeys=coverage,alert_status,bugs,vulnerabilities,code_smells": {
+   "component": {
+    "key": "acme_checkout-web",
+    "measures": [
+     {
+      "metric": "coverage",
+      "value": "61.5"
+     },
+     {
+      "metric": "alert_status",
+      "value": "ERROR"
+     },
+     {
+      "metric": "bugs",
+      "value": "14"
+     },
+     {
+      "metric": "vulnerabilities",
+      "value": "2"
+     },
+     {
+      "metric": "code_smells",
+      "value": "230"
+     }
+    ]
+   }
+  },
+  "/api/measures/component?component=acme_fraud-scoring&metricKeys=coverage,alert_status,bugs,vulnerabilities,code_smells": {
+   "component": {
+    "key": "acme_fraud-scoring",
+    "measures": [
+     {
+      "metric": "coverage",
+      "value": "77.0"
+     },
+     {
+      "metric": "alert_status",
+      "value": "WARN"
+     },
+     {
+      "metric": "bugs",
+      "value": "5"
+     },
+     {
+      "metric": "vulnerabilities",
+      "value": "1"
+     },
+     {
+      "metric": "code_smells",
+      "value": "88"
+     }
+    ]
+   }
+  }
+ },
+ "sentry": {
+  "/api/0/projects/acme/payments-api/issues/?query=is%3Aunresolved&statsPeriod=14d&limit=100": [
+   {
+    "id": "0"
+   },
+   {
+    "id": "1"
+   },
+   {
+    "id": "2"
+   },
+   {
+    "id": "3"
+   },
+   {
+    "id": "4"
+   },
+   {
+    "id": "5"
+   },
+   {
+    "id": "6"
+   },
+   {
+    "id": "7"
+   },
+   {
+    "id": "8"
+   },
+   {
+    "id": "9"
+   },
+   {
+    "id": "10"
+   },
+   {
+    "id": "11"
+   }
+  ],
+  "/api/0/projects/acme/payments-api/issues/?query=is%3Aunresolved%20firstSeen%3A-24h&statsPeriod=24h&limit=100": [
+   {
+    "id": "0"
+   }
+  ],
+  "/api/0/projects/acme/checkout-web/issues/?query=is%3Aunresolved&statsPeriod=14d&limit=100": [
+   {
+    "id": "0"
+   },
+   {
+    "id": "1"
+   },
+   {
+    "id": "2"
+   },
+   {
+    "id": "3"
+   },
+   {
+    "id": "4"
+   },
+   {
+    "id": "5"
+   },
+   {
+    "id": "6"
+   },
+   {
+    "id": "7"
+   },
+   {
+    "id": "8"
+   },
+   {
+    "id": "9"
+   },
+   {
+    "id": "10"
+   },
+   {
+    "id": "11"
+   },
+   {
+    "id": "12"
+   },
+   {
+    "id": "13"
+   },
+   {
+    "id": "14"
+   },
+   {
+    "id": "15"
+   },
+   {
+    "id": "16"
+   },
+   {
+    "id": "17"
+   },
+   {
+    "id": "18"
+   },
+   {
+    "id": "19"
+   },
+   {
+    "id": "20"
+   },
+   {
+    "id": "21"
+   },
+   {
+    "id": "22"
+   },
+   {
+    "id": "23"
+   },
+   {
+    "id": "24"
+   },
+   {
+    "id": "25"
+   },
+   {
+    "id": "26"
+   },
+   {
+    "id": "27"
+   },
+   {
+    "id": "28"
+   },
+   {
+    "id": "29"
+   },
+   {
+    "id": "30"
+   },
+   {
+    "id": "31"
+   },
+   {
+    "id": "32"
+   },
+   {
+    "id": "33"
+   },
+   {
+    "id": "34"
+   },
+   {
+    "id": "35"
+   },
+   {
+    "id": "36"
+   },
+   {
+    "id": "37"
+   },
+   {
+    "id": "38"
+   },
+   {
+    "id": "39"
+   },
+   {
+    "id": "40"
+   },
+   {
+    "id": "41"
+   },
+   {
+    "id": "42"
+   },
+   {
+    "id": "43"
+   },
+   {
+    "id": "44"
+   },
+   {
+    "id": "45"
+   },
+   {
+    "id": "46"
+   },
+   {
+    "id": "47"
+   },
+   {
+    "id": "48"
+   },
+   {
+    "id": "49"
+   },
+   {
+    "id": "50"
+   },
+   {
+    "id": "51"
+   },
+   {
+    "id": "52"
+   },
+   {
+    "id": "53"
+   },
+   {
+    "id": "54"
+   },
+   {
+    "id": "55"
+   },
+   {
+    "id": "56"
+   },
+   {
+    "id": "57"
+   },
+   {
+    "id": "58"
+   },
+   {
+    "id": "59"
+   },
+   {
+    "id": "60"
+   },
+   {
+    "id": "61"
+   },
+   {
+    "id": "62"
+   },
+   {
+    "id": "63"
+   },
+   {
+    "id": "64"
+   },
+   {
+    "id": "65"
+   },
+   {
+    "id": "66"
+   },
+   {
+    "id": "67"
+   },
+   {
+    "id": "68"
+   },
+   {
+    "id": "69"
+   },
+   {
+    "id": "70"
+   },
+   {
+    "id": "71"
+   },
+   {
+    "id": "72"
+   },
+   {
+    "id": "73"
+   },
+   {
+    "id": "74"
+   },
+   {
+    "id": "75"
+   },
+   {
+    "id": "76"
+   },
+   {
+    "id": "77"
+   },
+   {
+    "id": "78"
+   },
+   {
+    "id": "79"
+   },
+   {
+    "id": "80"
+   },
+   {
+    "id": "81"
+   },
+   {
+    "id": "82"
+   },
+   {
+    "id": "83"
+   },
+   {
+    "id": "84"
+   },
+   {
+    "id": "85"
+   },
+   {
+    "id": "86"
+   },
+   {
+    "id": "87"
+   },
+   {
+    "id": "88"
+   },
+   {
+    "id": "89"
+   },
+   {
+    "id": "90"
+   },
+   {
+    "id": "91"
+   },
+   {
+    "id": "92"
+   },
+   {
+    "id": "93"
+   },
+   {
+    "id": "94"
+   },
+   {
+    "id": "95"
+   },
+   {
+    "id": "96"
+   },
+   {
+    "id": "97"
+   },
+   {
+    "id": "98"
+   },
+   {
+    "id": "99"
+   }
+  ],
+  "/api/0/projects/acme/checkout-web/issues/?query=is%3Aunresolved%20firstSeen%3A-24h&statsPeriod=24h&limit=100": [
+   {
+    "id": "0"
+   },
+   {
+    "id": "1"
+   },
+   {
+    "id": "2"
+   },
+   {
+    "id": "3"
+   },
+   {
+    "id": "4"
+   },
+   {
+    "id": "5"
+   },
+   {
+    "id": "6"
+   },
+   {
+    "id": "7"
+   },
+   {
+    "id": "8"
+   }
+  ],
+  "/api/0/projects/acme/fraud-scoring/issues/?query=is%3Aunresolved&statsPeriod=14d&limit=100": [
+   {
+    "id": "0"
+   },
+   {
+    "id": "1"
+   },
+   {
+    "id": "2"
+   },
+   {
+    "id": "3"
+   },
+   {
+    "id": "4"
+   },
+   {
+    "id": "5"
+   },
+   {
+    "id": "6"
+   },
+   {
+    "id": "7"
+   },
+   {
+    "id": "8"
+   },
+   {
+    "id": "9"
+   },
+   {
+    "id": "10"
+   },
+   {
+    "id": "11"
+   },
+   {
+    "id": "12"
+   },
+   {
+    "id": "13"
+   },
+   {
+    "id": "14"
+   },
+   {
+    "id": "15"
+   },
+   {
+    "id": "16"
+   },
+   {
+    "id": "17"
+   },
+   {
+    "id": "18"
+   },
+   {
+    "id": "19"
+   }
+  ],
+  "/api/0/projects/acme/fraud-scoring/issues/?query=is%3Aunresolved%20firstSeen%3A-24h&statsPeriod=24h&limit=100": []
+ },
+ "datadog": {
+  "/api/v1/monitor?monitor_tags=service%3Apayments-api": [
+   {
+    "id": 0,
+    "overall_state": "OK"
+   },
+   {
+    "id": 1,
+    "overall_state": "OK"
+   },
+   {
+    "id": 2,
+    "overall_state": "OK"
+   },
+   {
+    "id": 3,
+    "overall_state": "OK"
+   },
+   {
+    "id": 4,
+    "overall_state": "OK"
+   },
+   {
+    "id": 5,
+    "overall_state": "OK"
+   },
+   {
+    "id": 6,
+    "overall_state": "OK"
+   },
+   {
+    "id": 7,
+    "overall_state": "OK"
+   },
+   {
+    "id": 8,
+    "overall_state": "OK"
+   }
+  ],
+  "/api/v1/monitor?monitor_tags=service%3Acheckout-web": [
+   {
+    "id": 0,
+    "overall_state": "Alert"
+   },
+   {
+    "id": 1,
+    "overall_state": "OK"
+   },
+   {
+    "id": 2,
+    "overall_state": "OK"
+   },
+   {
+    "id": 3,
+    "overall_state": "OK"
+   },
+   {
+    "id": 4,
+    "overall_state": "OK"
+   }
+  ],
+  "/api/v1/monitor?monitor_tags=service%3Afraud-scoring": [
+   {
+    "id": 0,
+    "overall_state": "OK"
+   },
+   {
+    "id": 1,
+    "overall_state": "OK"
+   },
+   {
+    "id": 2,
+    "overall_state": "OK"
+   },
+   {
+    "id": 3,
+    "overall_state": "OK"
+   },
+   {
+    "id": 4,
+    "overall_state": "OK"
+   },
+   {
+    "id": 5,
+    "overall_state": "OK"
+   },
+   {
+    "id": 6,
+    "overall_state": "OK"
+   }
+  ]
+ },
+ "snyk": {
+  "/rest/orgs/acme-org/issues?version=2024-10-15&scan_item.type=project&scan_item.id=prj-payments-api&status=open&effective_severity_level=critical,high&limit=100": {
+   "data": [
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    }
+   ]
+  },
+  "/rest/orgs/acme-org/issues?version=2024-10-15&scan_item.type=project&scan_item.id=prj-checkout-web&status=open&effective_severity_level=critical,high&limit=100": {
+   "data": [
+    {
+     "attributes": {
+      "effective_severity_level": "critical"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    },
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    }
+   ]
+  },
+  "/rest/orgs/acme-org/issues?version=2024-10-15&scan_item.type=project&scan_item.id=prj-fraud-scoring&status=open&effective_severity_level=critical,high&limit=100": {
+   "data": [
+    {
+     "attributes": {
+      "effective_severity_level": "high"
+     }
+    }
+   ]
+  }
+ },
+ "jira": {
+  "/rest/api/3/search/approximate-count": {
+   "count": 17
+  }
+ },
+ "kubernetes": {
+  "/apis/apps/v1/deployments?labelSelector=backstage.io%2Fkubernetes-id%3Dpayments-api": {
+   "items": [
+    {
+     "spec": {
+      "replicas": 6,
+      "template": {
+       "spec": {
+        "containers": [
+         {
+          "image": "ghcr.io/acme/payments-api:v1.4.1"
+         }
+        ]
+       }
+      }
+     },
+     "status": {
+      "readyReplicas": 6
+     }
+    }
+   ]
+  },
+  "/apis/apps/v1/deployments?labelSelector=backstage.io%2Fkubernetes-id%3Dcheckout-web": {
+   "items": [
+    {
+     "spec": {
+      "replicas": 4,
+      "template": {
+       "spec": {
+        "containers": [
+         {
+          "image": "ghcr.io/acme/checkout-web:v3.12.0"
+         }
+        ]
+       }
+      }
+     },
+     "status": {
+      "readyReplicas": 3
+     }
+    }
+   ]
+  },
+  "/apis/apps/v1/deployments?labelSelector=backstage.io%2Fkubernetes-id%3Dfraud-scoring": {
+   "items": [
+    {
+     "spec": {
+      "replicas": 3,
+      "template": {
+       "spec": {
+        "containers": [
+         {
+          "image": "ghcr.io/acme/fraud-scoring:2026.09.2"
+         }
+        ]
+       }
+      }
+     },
+     "status": {
+      "readyReplicas": 3
+     }
+    }
+   ]
+  }
+ }
+}

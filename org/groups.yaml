@@ -1,0 +1,54 @@
+# Teams and groups. Membership comes from User.spec.memberOf; parents give inheritance.
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: eng, title: Engineering }
+spec: { type: department }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: eng-commerce, title: Commerce Engineering }
+spec: { type: department, parent: eng }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: team-payments, title: Payments }
+spec:
+  type: team
+  parent: eng-commerce
+  email: payments@acme.example
+  slack: "#payments-eng"
+  oncall: payments-primary
+  pagerduty: PPAYMENTS
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: team-checkout, title: Checkout }
+spec:
+  type: team
+  parent: eng-commerce
+  slack: "#checkout-eng"
+  oncall: checkout-primary
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: team-platform, title: Platform Engineering }
+spec:
+  type: team
+  parent: eng
+  slack: "#platform"
+  oncall: platform-primary
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: team-data, title: Data Platform }
+spec: { type: team, parent: eng, slack: "#data" }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: sre, title: Site Reliability }
+spec: { type: team, parent: eng, slack: "#sre", oncall: sre-primary }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Group
+metadata: { name: finance, title: Finance }
+spec: { type: department }

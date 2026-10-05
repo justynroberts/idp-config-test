@@ -1,0 +1,390 @@
+{
+ "/teams": {
+  "teams": [
+   {
+    "id": "PT1PAY",
+    "name": "Payments",
+    "description": "Card authorisation and settlement"
+   },
+   {
+    "id": "PT2CHK",
+    "name": "Checkout",
+    "description": "Basket to order"
+   },
+   {
+    "id": "PT3LOY",
+    "name": "Loyalty",
+    "description": "Points, rewards and member pricing"
+   }
+  ],
+  "more": false
+ },
+ "/services": {
+  "services": [
+   {
+    "id": "PSVC001",
+    "name": "Payments API (Prod)",
+    "description": "Card authorisation",
+    "status": "active",
+    "html_url": "https://acme.pagerduty.com/service-directory/PSVC001",
+    "teams": [
+     {
+      "id": "PT1PAY"
+     }
+    ],
+    "escalation_policy": {
+     "summary": "Payments primary"
+    }
+   },
+   {
+    "id": "PSVC002",
+    "name": "Fraud Scoring",
+    "status": "active",
+    "html_url": "https://acme.pagerduty.com/service-directory/PSVC002",
+    "teams": [
+     {
+      "id": "PT1PAY"
+     }
+    ],
+    "escalation_policy": {
+     "summary": "Payments primary"
+    }
+   },
+   {
+    "id": "PSVC004",
+    "name": "Checkout Web",
+    "status": "active",
+    "html_url": "https://acme.pagerduty.com/service-directory/PSVC004",
+    "teams": [
+     {
+      "id": "PT2CHK"
+     }
+    ],
+    "escalation_policy": {
+     "summary": "Checkout primary"
+    }
+   },
+   {
+    "id": "PSVC010",
+    "name": "Loyalty Points",
+    "description": "Earns and spends loyalty points at checkout",
+    "status": "active",
+    "html_url": "https://acme.pagerduty.com/service-directory/PSVC010",
+    "teams": [
+     {
+      "id": "PT3LOY"
+     }
+    ],
+    "escalation_policy": {
+     "summary": "Loyalty primary"
+    }
+   },
+   {
+    "id": "PSVC011",
+    "name": "Loyalty Rewards Worker",
+    "description": "Turns points into rewards overnight",
+    "status": "active",
+    "html_url": "https://acme.pagerduty.com/service-directory/PSVC011",
+    "teams": [
+     {
+      "id": "PT3LOY"
+     }
+    ],
+    "escalation_policy": {
+     "summary": "Loyalty primary"
+    }
+   }
+  ],
+  "more": false
+ },
+ "/business_services": {
+  "business_services": [
+   {
+    "id": "PBS01",
+    "name": "Loyalty",
+    "description": "Member loyalty programme",
+    "team": {
+     "id": "PT3LOY"
+    }
+   }
+  ],
+  "more": false
+ },
+ "/service_dependencies/business_services/PBS01": {
+  "relationships": [
+   {
+    "supporting_service": {
+     "id": "PSVC010",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PBS01",
+     "type": "business_service"
+    }
+   },
+   {
+    "supporting_service": {
+     "id": "PSVC011",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PBS01",
+     "type": "business_service"
+    }
+   }
+  ]
+ },
+ "/service_dependencies/technical_services/PSVC001": {
+  "relationships": [
+   {
+    "supporting_service": {
+     "id": "PSVC002",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PSVC001",
+     "type": "service"
+    }
+   },
+   {
+    "supporting_service": {
+     "id": "PSVC001",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PSVC010",
+     "type": "service"
+    }
+   }
+  ]
+ },
+ "/service_dependencies/technical_services/PSVC002": {
+  "relationships": []
+ },
+ "/service_dependencies/technical_services/PSVC004": {
+  "relationships": [
+   {
+    "supporting_service": {
+     "id": "PSVC010",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PSVC004",
+     "type": "service"
+    }
+   }
+  ]
+ },
+ "/service_dependencies/technical_services/PSVC010": {
+  "relationships": [
+   {
+    "supporting_service": {
+     "id": "PSVC001",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PSVC010",
+     "type": "service"
+    }
+   },
+   {
+    "supporting_service": {
+     "id": "PSVC010",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PSVC011",
+     "type": "service"
+    }
+   }
+  ]
+ },
+ "/service_dependencies/technical_services/PSVC011": {
+  "relationships": [
+   {
+    "supporting_service": {
+     "id": "PSVC010",
+     "type": "service"
+    },
+    "dependent_service": {
+     "id": "PSVC011",
+     "type": "service"
+    }
+   }
+  ]
+ },
+ "/services/PSVC001": {
+  "service": {
+   "id": "PSVC001",
+   "name": "Payments API (Prod)",
+   "html_url": "https://acme.pagerduty.com/service-directory/PSVC001",
+   "status": "warning",
+   "escalation_policy": {
+    "id": "PEPPAY"
+   }
+  }
+ },
+ "/services/PSVC010": {
+  "service": {
+   "id": "PSVC010",
+   "name": "Loyalty Points",
+   "html_url": "https://acme.pagerduty.com/service-directory/PSVC010",
+   "status": "active",
+   "escalation_policy": {
+    "id": "PEPLOY"
+   }
+  }
+ },
+ "/services/PSVC002": {
+  "service": {
+   "id": "PSVC002",
+   "name": "Fraud Scoring",
+   "html_url": "https://acme.pagerduty.com/service-directory/PSVC002",
+   "status": "active",
+   "escalation_policy": {
+    "id": "PEPPAY"
+   }
+  }
+ },
+ "/incidents?service_ids[]=PSVC001&statuses[]=triggered&statuses[]=acknowledged&limit=20&sort_by=created_at:desc": {
+  "incidents": [
+   {
+    "id": "Q1ABC",
+    "incident_number": 4182,
+    "title": "p99 latency above 800ms on /v1/payments",
+    "status": "acknowledged",
+    "urgency": "high",
+    "created_at": "2026-10-04T13:12:00Z",
+    "html_url": "https://acme.pagerduty.com/incidents/Q1ABC",
+    "assignments": [
+     {
+      "assignee": {
+       "summary": "Alice Morgan"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "/incidents": {
+  "incidents": []
+ },
+ "/oncalls?escalation_policy_ids[]=PEPPAY&include[]=users&earliest=true": {
+  "oncalls": [
+   {
+    "escalation_level": 1,
+    "user": {
+     "name": "Alice Morgan",
+     "summary": "Alice Morgan",
+     "email": "alice@acme.example",
+     "html_url": "https://acme.pagerduty.com/users/ALICE"
+    },
+    "schedule": {
+     "summary": "Payments primary"
+    },
+    "end": "2026-10-06T09:00:00Z"
+   },
+   {
+    "escalation_level": 2,
+    "user": {
+     "name": "Dave Okafor",
+     "summary": "Dave Okafor",
+     "email": "dave@acme.example",
+     "html_url": "https://acme.pagerduty.com/users/DAVE"
+    },
+    "schedule": {
+     "summary": "SRE secondary"
+    },
+    "end": "2026-10-07T09:00:00Z"
+   }
+  ]
+ },
+ "/oncalls?escalation_policy_ids[]=PEPLOY&include[]=users&earliest=true": {
+  "oncalls": [
+   {
+    "escalation_level": 1,
+    "user": {
+     "name": "Priya Shah",
+     "summary": "Priya Shah",
+     "email": "priya@acme.example",
+     "html_url": "https://acme.pagerduty.com/users/PRIYA"
+    },
+    "schedule": {
+     "summary": "Loyalty primary"
+    },
+    "end": "2026-10-05T17:00:00Z"
+   }
+  ]
+ },
+ "/oncalls": {
+  "oncalls": []
+ },
+ "/oncalls?escalation_policy_ids[]=PPAYMENTS&include[]=users&earliest=true": {
+  "oncalls": [
+   {
+    "escalation_level": 1,
+    "user": {
+     "name": "Alice Morgan",
+     "summary": "Alice Morgan",
+     "email": "alice@acme.example",
+     "html_url": "https://acme.pagerduty.com/users/ALICE"
+    },
+    "schedule": {
+     "summary": "Payments primary"
+    },
+    "end": "2026-10-06T09:00:00Z"
+   },
+   {
+    "escalation_level": 2,
+    "user": {
+     "name": "Dave Okafor",
+     "summary": "Dave Okafor",
+     "email": "dave@acme.example",
+     "html_url": "https://acme.pagerduty.com/users/DAVE"
+    },
+    "schedule": {
+     "summary": "SRE secondary"
+    },
+    "end": "2026-10-07T09:00:00Z"
+   }
+  ]
+ },
+ "/services/PSVC004": {
+  "service": {
+   "id": "PSVC004",
+   "name": "Checkout Web",
+   "html_url": "https://acme.pagerduty.com/service-directory/PSVC004",
+   "status": "active",
+   "escalation_policy": {
+    "id": "PEPCHK"
+   }
+  }
+ },
+ "/services/PSVC011": {
+  "service": {
+   "id": "PSVC011",
+   "name": "Loyalty Rewards Worker",
+   "html_url": "https://acme.pagerduty.com/service-directory/PSVC011",
+   "status": "active",
+   "escalation_policy": {
+    "id": "PEPLOY"
+   }
+  }
+ },
+ "/oncalls?escalation_policy_ids[]=PEPCHK&include[]=users&earliest=true": {
+  "oncalls": [
+   {
+    "escalation_level": 1,
+    "user": {
+     "name": "Bob Singh",
+     "summary": "Bob Singh",
+     "email": "bob@acme.example"
+    },
+    "schedule": {
+     "summary": "Checkout primary"
+    },
+    "end": "2026-10-05T09:00:00Z"
+   }
+  ]
+ }
+}

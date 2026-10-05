@@ -1,0 +1,24 @@
+apiVersion: idp.fintonlabs.dev/v1
+kind: Resource
+metadata: { name: payments-db, title: Payments Postgres, tags: [postgres, pci] }
+spec: { type: database, owner: team-payments, system: payments, lifecycle: production }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Resource
+metadata: { name: payments-queue, title: Payments Kafka topic, tags: [kafka] }
+spec: { type: queue, owner: team-payments, system: payments, lifecycle: production }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Resource
+metadata: { name: cart-db, title: Cart Postgres, tags: [postgres] }
+spec: { type: database, owner: team-checkout, system: checkout, lifecycle: production }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: Resource
+metadata: { name: warehouse, title: Data warehouse, tags: [snowflake] }
+spec: { type: warehouse, owner: team-data, system: data-platform, lifecycle: production }
+---
+apiVersion: idp.fintonlabs.dev/v1
+kind: API
+metadata: { name: payments-openapi, title: Payments API (OpenAPI), description: Public contract for payment authorisation. }
+spec: { type: openapi, owner: team-payments, system: payments, lifecycle: production, definition: "https://github.com/acme/payments-api/blob/main/openapi.yaml" }

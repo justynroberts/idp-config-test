@@ -1,0 +1,76 @@
+{
+ "eu-west-1": {
+  "ResourceTagMappingList": [
+   {
+    "ResourceARN": "arn:aws:rds:eu-west-1:123456789012:db:payments-db",
+    "Tags": [
+     {
+      "Key": "team",
+      "Value": "payments"
+     },
+     {
+      "Key": "system",
+      "Value": "payments"
+     },
+     {
+      "Key": "environment",
+      "Value": "production"
+     }
+    ]
+   },
+   {
+    "ResourceARN": "arn:aws:sqs:eu-west-1:123456789012:loyalty-events",
+    "Tags": [
+     {
+      "Key": "team",
+      "Value": "loyalty"
+     },
+     {
+      "Key": "Name",
+      "Value": "loyalty-events"
+     }
+    ]
+   },
+   {
+    "ResourceARN": "arn:aws:s3:::acme-checkout-assets",
+    "Tags": [
+     {
+      "Key": "owner",
+      "Value": "checkout"
+     },
+     {
+      "Key": "system",
+      "Value": "checkout"
+     }
+    ]
+   },
+   {
+    "ResourceARN": "arn:aws:ec2:eu-west-1:123456789012:instance/i-0abc123",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "legacy-batch-box"
+     }
+    ]
+   }
+  ],
+  "PaginationToken": "p2"
+ },
+ "eu-west-1#p2": {
+  "ResourceTagMappingList": [
+   {
+    "ResourceARN": "arn:aws:dynamodb:eu-west-1:123456789012:table/fraud-features",
+    "Tags": [
+     {
+      "Key": "team",
+      "Value": "payments"
+     },
+     {
+      "Key": "system",
+      "Value": "payments"
+     }
+    ]
+   }
+  ]
+ }
+}
