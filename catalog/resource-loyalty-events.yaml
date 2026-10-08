@@ -1,0 +1,16 @@
+# Proposed by Carol Davies (AI-authored, review before merging)
+apiVersion: idp.fintonlabs.dev/v1
+kind: Resource
+metadata:
+  name: loyalty-events
+  namespace: default
+  title: loyalty-events
+  tags:
+    - eu-west-1
+    - sqs
+  annotations:
+    aws/arn: arn:aws:sqs:eu-west-1:123456789012:loyalty-events
+    aws/region: eu-west-1
+spec:
+  type: queue
+  owner: team-loyalty
